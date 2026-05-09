@@ -3,31 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Genz Mini App</title>
+    <title>Genz Receiver</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #1a1a1a; color: white; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
-        .card { background: #252525; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; width: 80%; border: 1px solid #333; }
-        .balance-title { color: #aaa; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
-        .balance-value { font-size: 36px; font-weight: bold; margin: 15px 0; color: #00ff88; }
-        .btn { background: #0088cc; color: white; border: none; padding: 15px 30px; border-radius: 12px; font-weight: bold; width: 100%; font-size: 16px; cursor: pointer; transition: 0.3s; }
-        .btn:active { transform: scale(0.95); }
+        :root { --primary: #00ff88; --bg: #0f0f0f; --card: #1a1a1a; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; margin: 0; padding-bottom: 70px; }
+        .header { padding: 20px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to bottom, #00ff8833, transparent); }
+        .balance-card { background: linear-gradient(135deg, #00ff88, #0088cc); margin: 0 20px; padding: 25px; border-radius: 20px; color: white; position: relative; overflow: hidden; }
+        .balance-val { font-size: 40px; font-weight: bold; margin: 10px 0; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 20px; }
+        .stat-item { background: var(--card); padding: 15px; border-radius: 15px; text-align: center; border: 1px solid #333; }
+        .stat-item i { color: var(--primary); margin-bottom: 5px; }
+        .task-list { padding: 0 20px; }
+        .task-item { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
+        .btn-claim { background: var(--primary); color: black; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #111; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #333; }
+        .nav-item { color: #888; text-decoration: none; font-size: 12px; display: flex; flex-direction: column; align-items: center; }
+        .nav-item.active { color: var(--primary); }
+        .nav-item i { font-size: 20px; margin-bottom: 4px; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <div class="balance-title">Total Balance</div>
-        <div id="balance" class="balance-value">Rp 1.500.000</div>
-        <button class="btn" onclick="withdraw()">WITHDRAW</button>
+    <div class="header">
+        <div><b>Hello, <span id="user-name">GenZUser</span> 👋</b><br><small>Yuk, earn USDT sekarang!</small></div>
+        <i class="fas fa-bell"></i>
+    </div>
+
+    <div class="balance-card">
+        <small><i class="fas fa-wallet"></i> TOTAL BALANCE</small>
+        <div class="balance-val">16.80 <small style="font-size: 18px;">USDT</small></div>
+        <div style="display: flex; gap: 10px;">
+            <button onclick="alert('Withdraw logic here')" style="flex:1; padding: 10px; border-radius: 10px; border:none; background: white; font-weight: bold;">Withdraw</button>
+            <button style="flex:1; padding: 10px; border-radius: 10px; border:none; background: rgba(255,255,255,0.2); color:white; font-weight: bold;">Invite Friends</button>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-item"><i class="fas fa-check-circle"></i><br><b>0</b><br><small>Tasks</small></div>
+        <div class="stat-item"><i class="fas fa-users"></i><br><b>56</b><br><small>Ref</small></div>
+        <div class="stat-item"><i class="fas fa-ticket-alt"></i><br><b>1</b><br><small>Spins</small></div>
+    </div>
+
+    <div class="task-list">
+        <h4>📈 Ways to Earn</h4>
+        <div class="task-item">
+            <div><b>Join Channel</b><br><small>+0.50 USDT</small></div>
+            <button class="btn-claim" onclick="this.innerText='Done'">Start</button>
+        </div>
+        <div class="task-item">
+            <div><b>Follow Twitter</b><br><small>+0.25 USDT</small></div>
+            <button class="btn-claim" onclick="this.innerText='Done'">Start</button>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <a href="#" class="nav-item active"><i class="fas fa-home"></i>Home</a>
+        <a href="#" class="nav-item"><i class="fas fa-tasks"></i>Task</a>
+        <a href="#" class="nav-item" style="background: var(--primary); color: black; padding: 10px; border-radius: 50%; margin-top: -30px; width: 40px; height: 40px; justify-content: center; box-shadow: 0 0 15px var(--primary);"><i class="fas fa-gamepad"></i></a>
+        <a href="#" class="nav-item"><i class="fas fa-user-friends"></i>Refer</a>
+        <a href="#" class="nav-item"><i class="fas fa-user"></i>Account</a>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Biar layar penuh pas dibuka
-
-        function withdraw() {
-            tg.showAlert("Withdraw Berhasil! Saldo akan dikirim ke akun Anda.");
-        }
+        tg.expand();
+        document.getElementById('user-name').innerText = tg.initDataUnsafe.user?.first_name || "GenZUser";
     </script>
 </body>
 </html>
